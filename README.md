@@ -1,7 +1,7 @@
- <H3>ENTER YOUR NAME</H3>
-<H3>ENTER YOUR REGISTER NO.</H3>
+ <H3>ENTER YOUR NAME: John Paul</H3>
+<H3>ENTER YOUR REGISTER NO.: 212223230093</H3>
 <H3>EX. NO.8</H3>
-<H3>DATE:</H3>
+
 <H1 ALIGN =CENTER>Implementation of Speech Recognition</H1>
 <H3>Aim:</H3> 
  To implement the conversion of live speech to text.<BR>
@@ -20,11 +20,39 @@ Step 11: Perform speech recognition with exceptional handling:<Br>
 •	If successful, print the recognized text.<Br>
 •	Handle specific exceptions: If the recognition result is unknown or if there is an issue with the request to the Google Speech Recognition service, print corresponding error messages.<Br>
 •	A generic exception block captures any other unexpected errors.<Br>
-<H3>Program:</H3>
 
-Insert your code her
+## Program:
+
+```python
+import nltk
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.corpus import stopwords
+text = """NLP is a branch of artificial intelligence.
+It helps computers understand human language.
+NLP is used in chatbots and language translation.
+It is also used for sentiment analysis and summarization."""
+stop = set(stopwords.words('english'))
+words = [w.lower() for w in word_tokenize(text)
+         if w.isalnum() and w.lower() not in stop]
+freq = nltk.FreqDist(words)
+sentences = sent_tokenize(text)
+scores = {}
+for s in sentences:
+    scores[s] = sum(freq[w.lower()] for w in word_tokenize(s)
+                    if w.lower() in freq)
+summary = sorted(sentences, key=scores.get, reverse=True)[:3]
+print("Original Text:")
+print(text)
+print("\nSummary:")
+print(" ".join(summary))
+```
 
 <H3> Output:</H3>
-Show the results here
+<img width="1358" height="416" alt="image" src="https://github.com/user-attachments/assets/03ade7c4-b9f9-4c12-8bef-7061eb67675b" />
+
 
 <H3> Result:</H3>
+Thus ,the program to perform the Text summarization is executed sucessfully.
