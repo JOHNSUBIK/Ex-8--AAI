@@ -24,34 +24,36 @@ Step 11: Perform speech recognition with exceptional handling:<Br>
 ## Program:
 
 ```python
-import nltk
-nltk.download('punkt')
-nltk.download('punkt_tab')
-nltk.download('stopwords')
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.corpus import stopwords
-text = """NLP is a branch of artificial intelligence.
-It helps computers understand human language.
-NLP is used in chatbots and language translation.
-It is also used for sentiment analysis and summarization."""
-stop = set(stopwords.words('english'))
-words = [w.lower() for w in word_tokenize(text)
-         if w.isalnum() and w.lower() not in stop]
-freq = nltk.FreqDist(words)
-sentences = sent_tokenize(text)
-scores = {}
-for s in sentences:
-    scores[s] = sum(freq[w.lower()] for w in word_tokenize(s)
-                    if w.lower() in freq)
-summary = sorted(sentences, key=scores.get, reverse=True)[:3]
-print("Original Text:")
-print(text)
-print("\nSummary:")
-print(" ".join(summary))
+
+import speech_recognition as sr
+
+r = sr.Recognizer()
+duration = 15
+
+print("Say something... (you have 15 seconds)")
+
+try:
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)  
+        print("Listening...")
+        audio_data = r.listen(source, timeout=duration)
+        print("Processing...")
+    
+    text = r.recognize_google(audio_data)
+    print("You said:", text)
+
+except sr.WaitTimeoutError:
+    print("No speech detected in given time.")
+except sr.UnknownValueError:
+    print("Sorry, could not understand the audio.")
+except sr.RequestError as e:
+    print(f"Error with the request to Google Speech Recognition service: {e}")
+except Exception as e:
+    print(f"Error: {e}")
 ```
 
 <H3> Output:</H3>
-<img width="1358" height="416" alt="image" src="https://github.com/user-attachments/assets/03ade7c4-b9f9-4c12-8bef-7061eb67675b" />
+<img width="779" height="145" alt="image" src="https://github.com/user-attachments/assets/64b87482-afa7-4177-af91-67332385d868" />
 
 
 <H3> Result:</H3>
